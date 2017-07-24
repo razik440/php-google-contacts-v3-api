@@ -1,6 +1,6 @@
 <?php
 
-namespace rapidweb\googlecontacts\helpers;
+namespace razik440\googlecontacts\helpers;
 
 abstract class GoogleHelper
 {
@@ -11,7 +11,8 @@ abstract class GoogleHelper
         $clientSecret,
         $redirectUri,
         $developerKey,
-        $refreshToken
+        $refreshToken,
+        $editURL
     ) {
         self::$_config = new \stdClass();
         self::$_config->clientID = $clientID;
@@ -19,18 +20,24 @@ abstract class GoogleHelper
         self::$_config->redirectUri = $redirectUri;
         self::$_config->developerKey = $developerKey;
         self::$_config->refreshToken = $refreshToken;
+        self::$_config->editURL = $editURL;
     }
 
     private static function loadConfig($customConfig = NULL)
     {
         self::$_config = $customConfig;
-        if (NULL === self::$_config) {
-            $configPath = __DIR__.'/../../../../.config.json';
+        if (NULL === self::$_config){
+            $configPath = base_path().'/config/google.api.json';
             if(!file_exists($configPath)) throw new \Exception('Not found config.json');
             $contents = file_get_contents($configPath);
             self::$_config = json_decode($contents);
         }
 
+        return self::$_config;
+    }
+
+    public static function getConfig()
+    {
         return self::$_config;
     }
 
